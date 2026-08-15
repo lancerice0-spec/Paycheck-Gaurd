@@ -1,0 +1,374 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="theme-color" content="#0b1220" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="apple-mobile-web-app-title" content="Paycheck Guard" />
+  <title>Paycheck Guard</title>
+  <link rel="manifest" href="manifest.webmanifest" />
+  <link rel="icon" href="icon.svg" type="image/svg+xml" />
+  <style>
+    :root{--bg:#08111f;--panel:#101c2f;--panel2:#14243b;--line:#243753;--text:#f4f8ff;--muted:#9fb0c9;--good:#51d88a;--warn:#ffc857;--bad:#ff6b6b;--accent:#62a8ff;--shadow:0 12px 35px rgba(0,0,0,.24)}
+    *{box-sizing:border-box} html{background:var(--bg);color-scheme:dark} body{margin:0;font-family:Inter,ui-sans-serif,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;background:radial-gradient(circle at top,#132746 0,#08111f 42%);color:var(--text);min-height:100vh}
+    button,input,select{font:inherit} button{cursor:pointer}
+    .app{max-width:760px;margin:0 auto;min-height:100vh;padding:calc(env(safe-area-inset-top) + 14px) 16px calc(92px + env(safe-area-inset-bottom))}
+    .topbar{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:18px}.brand{display:flex;align-items:center;gap:11px}.logo{width:42px;height:42px;border-radius:13px;background:linear-gradient(145deg,#62a8ff,#51d88a);display:grid;place-items:center;color:#07101d;font-weight:950;font-size:22px;box-shadow:var(--shadow)}
+    h1,h2,h3,p{margin:0}.brand h1{font-size:20px}.brand p{font-size:12px;color:var(--muted);margin-top:2px}.iconbtn{width:42px;height:42px;border-radius:13px;border:1px solid var(--line);background:rgba(16,28,47,.8);color:var(--text);font-size:18px}
+    .view{display:none}.view.active{display:block}.stack{display:grid;gap:14px}.card{background:linear-gradient(180deg,rgba(20,36,59,.98),rgba(13,25,43,.98));border:1px solid var(--line);border-radius:20px;padding:17px;box-shadow:var(--shadow)}
+    .hero{padding:22px}.eyebrow{text-transform:uppercase;letter-spacing:.12em;font-size:11px;color:var(--muted);font-weight:800}.money{font-size:48px;line-height:1;font-weight:900;letter-spacing:-.04em;margin-top:9px}.hero-sub{margin-top:9px;color:var(--muted);font-size:14px}.status{display:inline-flex;align-items:center;gap:7px;margin-top:15px;padding:8px 11px;border-radius:999px;background:rgba(81,216,138,.12);color:var(--good);font-size:12px;font-weight:800}.status.attn{background:rgba(255,200,87,.12);color:var(--warn)}
+    .grid2{display:grid;grid-template-columns:1fr 1fr;gap:12px}.metric{padding:15px}.metric .label{font-size:12px;color:var(--muted)}.metric .value{font-size:22px;font-weight:850;margin-top:6px}.metric .small{font-size:12px;color:var(--muted);margin-top:4px}
+    .section-title{font-size:17px;font-weight:850;margin-bottom:11px}.row{display:flex;align-items:center;justify-content:space-between;gap:12px}.muted{color:var(--muted)}.small{font-size:12px}.danger{color:var(--bad)}.good{color:var(--good)}.warn{color:var(--warn)}
+    .btn{border:0;border-radius:14px;padding:13px 15px;font-weight:850;background:var(--accent);color:#06101d}.btn.secondary{background:#1b2c46;color:var(--text);border:1px solid var(--line)}.btn.good{background:var(--good);color:#06150e}.btn.danger{background:rgba(255,107,107,.14);color:#ff9b9b;border:1px solid rgba(255,107,107,.3)}.btn.block{width:100%}.btn.smallbtn{padding:9px 11px;border-radius:11px;font-size:12px}
+    .actions{display:grid;grid-template-columns:1fr 1fr;gap:10px}.input-wrap{display:grid;gap:7px}.input-wrap label{font-size:12px;color:var(--muted);font-weight:750}.input,select{width:100%;padding:13px 14px;border:1px solid var(--line);background:#0d192a;color:var(--text);border-radius:13px;outline:none}.input:focus,select:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(98,168,255,.12)}
+    .form-grid{display:grid;grid-template-columns:1fr 1fr;gap:11px}.form-grid .full{grid-column:1/-1}.quickpay{font-size:27px;font-weight:800;letter-spacing:-.02em}.hint{font-size:12px;color:var(--muted);line-height:1.5}.plan{display:grid;gap:9px}.plan-row{display:flex;justify-content:space-between;gap:12px;padding:10px 0;border-bottom:1px solid var(--line)}.plan-row:last-child{border-bottom:0}.plan-row strong{font-weight:850}
+    .list{display:grid;gap:10px}.item{background:#0d192a;border:1px solid var(--line);border-radius:15px;padding:13px}.item-title{font-weight:850}.item-meta{font-size:12px;color:var(--muted);margin-top:4px}.item-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:11px}.progress{height:8px;background:#07101d;border-radius:999px;overflow:hidden;margin-top:10px;border:1px solid #1d2d46}.progress>span{display:block;height:100%;background:linear-gradient(90deg,var(--accent),var(--good));border-radius:999px}.badge{display:inline-block;padding:5px 8px;border-radius:999px;font-size:11px;font-weight:800;background:#1c2d47;color:var(--muted)}
+    .empty{padding:22px;text-align:center;color:var(--muted);border:1px dashed var(--line);border-radius:15px}.divider{height:1px;background:var(--line);margin:14px 0}.callout{padding:13px;border-radius:14px;background:rgba(98,168,255,.08);border:1px solid rgba(98,168,255,.2);font-size:13px;line-height:1.5}
+    .bottomnav{position:fixed;left:0;right:0;bottom:0;z-index:30;background:rgba(7,15,27,.93);backdrop-filter:blur(16px);border-top:1px solid var(--line);padding:8px 8px calc(8px + env(safe-area-inset-bottom));display:flex;justify-content:center}.navinner{width:min(760px,100%);display:grid;grid-template-columns:repeat(5,1fr);gap:3px}.navbtn{border:0;background:transparent;color:var(--muted);padding:9px 3px;border-radius:12px;font-size:10px;font-weight:800}.navbtn span{display:block;font-size:19px;line-height:1.1;margin-bottom:3px}.navbtn.active{background:#15243a;color:var(--text)}
+    .toast{position:fixed;left:50%;bottom:calc(86px + env(safe-area-inset-bottom));transform:translateX(-50%) translateY(20px);background:#f4f8ff;color:#08111f;padding:10px 14px;border-radius:999px;font-size:12px;font-weight:850;opacity:0;pointer-events:none;transition:.2s;z-index:50;max-width:88%;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+    .demo-banner{display:none;margin-bottom:12px;padding:10px 12px;border-radius:13px;background:rgba(255,200,87,.12);border:1px solid rgba(255,200,87,.28);color:var(--warn);font-size:12px;font-weight:800}.demo-banner.show{display:block}
+    @media(max-width:520px){.money{font-size:44px}.form-grid{grid-template-columns:1fr}.form-grid .full{grid-column:auto}.actions{grid-template-columns:1fr}.grid2{gap:9px}.metric .value{font-size:19px}}
+  </style>
+</head>
+<body>
+<div class="app">
+  <div class="topbar">
+    <div class="brand"><div class="logo">PG</div><div><h1>Paycheck Guard</h1><p>Protect bills. Know what is safe.</p></div></div>
+    <button class="iconbtn" id="undoBtn" title="Undo last change">↶</button>
+  </div>
+  <div class="demo-banner" id="demoBanner">DEMO DATA — nothing here is your real financial information.</div>
+
+  <main>
+    <section class="view active" id="view-home">
+      <div class="stack">
+        <div class="card hero">
+          <div class="eyebrow">Safe to spend</div>
+          <div class="money" id="safeSpend">$0</div>
+          <div class="hero-sub" id="heroSub">Set up your pay and bills to get started.</div>
+          <div class="status" id="protectionStatus">● Ready to set up</div>
+        </div>
+
+        <div class="grid2">
+          <div class="card metric"><div class="label">Bills protected</div><div class="value" id="protectedTotal">$0</div><div class="small" id="coveredThrough">Covered through —</div></div>
+          <div class="card metric"><div class="label">Emergency reserve</div><div class="value" id="reserveTotal">$0</div><div class="small" id="reserveTarget">Target $0</div></div>
+          <div class="card metric"><div class="label">Tracked cash</div><div class="value" id="cashBalance">$0</div><div class="small">after recorded spending/payments</div></div>
+          <div class="card metric"><div class="label">Next bill</div><div class="value" id="nextBillAmount">—</div><div class="small" id="nextBillName">No bills yet</div></div>
+        </div>
+
+        <div class="card">
+          <div class="section-title">What should I do with this paycheck?</div>
+          <div class="actions">
+            <button class="btn" data-go="paycheck">Add paycheck</button>
+            <button class="btn secondary" data-go="spending">Add spending</button>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="row"><div class="section-title" style="margin:0">Base-pay stress test</div><span class="badge">Next 4 weeks</span></div>
+          <div id="stressText" class="callout" style="margin-top:12px">Add your normal take-home pay and bills to run the no-OT test.</div>
+        </div>
+
+        <div class="card">
+          <div class="row"><div class="section-title" style="margin:0">Upcoming bills</div><button class="btn secondary smallbtn" data-go="bills">View all</button></div>
+          <div class="list" id="homeBills" style="margin-top:12px"></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="view" id="view-paycheck">
+      <div class="stack">
+        <div class="card">
+          <div class="section-title">Add a paycheck</div>
+          <div class="input-wrap"><label>Quick entry</label><input class="input quickpay" id="payQuick" inputmode="decimal" placeholder="1550 76h" /></div>
+          <div class="hint" style="margin-top:8px">Type your take-home amount and hours. Example: <strong>1550 76h</strong>. Anything above your normal paycheck is treated as extra/OT money.</div>
+          <div class="form-grid" style="margin-top:14px">
+            <div class="input-wrap"><label>Pay date</label><input class="input" type="date" id="payDate" /></div>
+            <div class="input-wrap"><label>Take-home amount</label><input class="input" type="number" step="0.01" id="payAmount" placeholder="1550" /></div>
+            <div class="input-wrap"><label>Hours</label><input class="input" type="number" step="0.1" id="payHours" placeholder="76" /></div>
+            <div class="input-wrap"><label>Normal base paycheck</label><input class="input" type="number" step="0.01" id="basePayPreview" placeholder="1000" /></div>
+          </div>
+          <button class="btn block" id="addPayBtn" style="margin-top:14px">Protect this paycheck</button>
+        </div>
+        <div class="card" id="payPlanCard" style="display:none">
+          <div class="section-title">Paycheck plan</div><div class="plan" id="payPlan"></div>
+        </div>
+        <div class="card"><div class="section-title">Paycheck history</div><div class="list" id="payHistory"></div></div>
+      </div>
+    </section>
+
+    <section class="view" id="view-bills">
+      <div class="stack">
+        <div class="card">
+          <div class="section-title" id="billFormTitle">Add a monthly bill</div>
+          <input type="hidden" id="billEditId" />
+          <div class="form-grid">
+            <div class="input-wrap full"><label>Bill name</label><input class="input" id="billName" placeholder="Car insurance" /></div>
+            <div class="input-wrap"><label>Amount</label><input class="input" type="number" step="0.01" id="billAmount" placeholder="175" /></div>
+            <div class="input-wrap"><label>Due day</label><input class="input" type="number" min="1" max="31" id="billDay" placeholder="18" /></div>
+            <div class="input-wrap full"><label>Priority</label><select id="billPriority"><option value="essential">Essential</option><option value="normal">Normal</option></select></div>
+          </div>
+          <div class="actions" style="margin-top:14px"><button class="btn" id="saveBillBtn">Save bill</button><button class="btn secondary" id="cancelBillEdit" style="display:none">Cancel edit</button></div>
+        </div>
+        <div class="card"><div class="section-title">Bills & funding</div><div class="list" id="billList"></div></div>
+      </div>
+    </section>
+
+    <section class="view" id="view-spending">
+      <div class="stack">
+        <div class="card">
+          <div class="section-title">Add spending</div>
+          <div class="form-grid">
+            <div class="input-wrap"><label>Amount</label><input class="input" id="spendAmount" type="number" step="0.01" placeholder="42.50" /></div>
+            <div class="input-wrap"><label>Category</label><select id="spendCategory"><option>Gas</option><option>Food</option><option>Family</option><option>Fun</option><option>Shopping</option><option>Other</option></select></div>
+            <div class="input-wrap full"><label>Note</label><input class="input" id="spendNote" placeholder="Optional" /></div>
+            <div class="input-wrap full"><label>Date</label><input class="input" id="spendDate" type="date" /></div>
+          </div>
+          <button class="btn block" id="addSpendBtn" style="margin-top:14px">Record spending</button>
+        </div>
+        <div class="card"><div class="section-title">Spending history</div><div class="list" id="spendHistory"></div></div>
+        <div class="card"><div class="section-title">Bill payment history</div><div class="list" id="paymentHistory"></div></div>
+      </div>
+    </section>
+
+    <section class="view" id="view-setup">
+      <div class="stack">
+        <div class="card">
+          <div class="section-title">Your normal money setup</div>
+          <div class="form-grid">
+            <div class="input-wrap"><label>Normal no-OT take-home</label><input class="input" id="setBasePay" type="number" step="0.01" placeholder="1000" /></div>
+            <div class="input-wrap"><label>Pay frequency</label><select id="setFrequency"><option value="weekly">Weekly</option><option value="biweekly">Every 2 weeks</option></select></div>
+            <div class="input-wrap"><label>Next payday</label><input class="input" id="setNextPay" type="date" /></div>
+            <div class="input-wrap"><label>Protect bills ahead</label><select id="setWeeks"><option value="1">1 week</option><option value="2">2 weeks</option><option value="3">3 weeks</option><option value="4">4 weeks</option><option value="6">6 weeks</option></select></div>
+            <div class="input-wrap full"><label>Emergency reserve target</label><input class="input" id="setReserveTarget" type="number" step="0.01" placeholder="750" /></div>
+          </div>
+          <button class="btn block" id="saveSettingsBtn" style="margin-top:14px">Save setup</button>
+        </div>
+        <div class="card">
+          <div class="section-title">Sync current checking balance</div>
+          <div class="hint">Use this when you first start, or if the app's tracked cash ever gets out of sync with your bank. This does not connect to your bank.</div>
+          <div class="input-wrap" style="margin-top:12px"><label>Current checking balance</label><input class="input" id="syncBalance" type="number" step="0.01" placeholder="2450" /></div>
+          <button class="btn secondary block" id="syncBalanceBtn" style="margin-top:12px">Set tracked cash to this balance</button>
+        </div>
+        <div class="card">
+          <div class="section-title">Data & backup</div>
+          <div class="actions"><button class="btn secondary" id="exportBtn">Export backup</button><button class="btn secondary" id="importBtn">Import backup</button></div>
+          <input id="importFile" type="file" accept="application/json" style="display:none" />
+          <div class="divider"></div>
+          <div class="actions"><button class="btn secondary" id="demoBtn">Load demo data</button><button class="btn danger" id="resetBtn">Reset everything</button></div>
+          <div class="hint" style="margin-top:12px">For this demo, your financial data stays in this browser on this device. Cloud accounts and bank syncing can come after we lock down the budgeting behavior.</div>
+        </div>
+      </div>
+    </section>
+  </main>
+</div>
+
+<nav class="bottomnav"><div class="navinner">
+  <button class="navbtn active" data-view="home"><span>⌂</span>Home</button>
+  <button class="navbtn" data-view="paycheck"><span>＋</span>Paycheck</button>
+  <button class="navbtn" data-view="bills"><span>▤</span>Bills</button>
+  <button class="navbtn" data-view="spending"><span>◉</span>Spending</button>
+  <button class="navbtn" data-view="setup"><span>⚙</span>Setup</button>
+</div></nav>
+<div class="toast" id="toast"></div>
+
+<script>
+(() => {
+  'use strict';
+  const DB_KEY='paycheck_guard_v1';
+  const UNDO_KEY='paycheck_guard_undo_v1';
+  const $=id=>document.getElementById(id);
+  const money=n=>new Intl.NumberFormat('en-US',{style:'currency',currency:'USD',maximumFractionDigits:2}).format(Number(n)||0);
+  const iso=d=>{const x=new Date(d); return `${x.getFullYear()}-${String(x.getMonth()+1).padStart(2,'0')}-${String(x.getDate()).padStart(2,'0')}`};
+  const parseDate=s=>{const [y,m,d]=String(s).split('-').map(Number); return new Date(y,m-1,d)};
+  const addDays=(d,n)=>{const x=new Date(d); x.setDate(x.getDate()+n); return x};
+  const uid=()=>Math.random().toString(36).slice(2)+Date.now().toString(36);
+  const today=()=>{const d=new Date(); return new Date(d.getFullYear(),d.getMonth(),d.getDate())};
+  const clone=o=>JSON.parse(JSON.stringify(o));
+
+  const blankState=()=>({
+    version:1,
+    settings:{basePay:0,frequency:'weekly',nextPayDate:'',protectionWeeks:3,reserveTarget:750},
+    cashBalance:0,
+    emergencyReserve:0,
+    bills:[],paychecks:[],spending:[],payments:[],funding:{},
+    lastPlan:null,demo:false
+  });
+
+  let state=load();
+  function load(){try{const raw=localStorage.getItem(DB_KEY);return raw?Object.assign(blankState(),JSON.parse(raw)):blankState()}catch(e){return blankState()}}
+  function save(){localStorage.setItem(DB_KEY,JSON.stringify(state));renderAll()}
+  function snapshot(){try{localStorage.setItem(UNDO_KEY,JSON.stringify(state))}catch(e){}}
+  function mutate(fn,msg){snapshot();fn();save();if(msg)toast(msg)}
+  function undo(){const raw=localStorage.getItem(UNDO_KEY);if(!raw)return toast('Nothing to undo');const current=JSON.stringify(state);state=JSON.parse(raw);localStorage.setItem(UNDO_KEY,current);save();toast('Last change undone')}
+  function toast(msg){const el=$('toast');el.textContent=msg;el.classList.add('show');clearTimeout(toast.t);toast.t=setTimeout(()=>el.classList.remove('show'),1800)}
+
+  function cadenceDays(){return state.settings.frequency==='biweekly'?14:7}
+  function billDateForMonth(bill,y,m){const last=new Date(y,m+1,0).getDate();return new Date(y,m-1+1,Math.min(Number(bill.dueDay)||1,last))}
+  function occurrenceKey(bill,date){return `${bill.id}:${iso(date)}`}
+  function isPaid(key){return state.payments.some(p=>p.occurrenceKey===key)}
+  function funded(key){return Number(state.funding[key]||0)}
+  function totalFunding(){return Object.values(state.funding).reduce((a,b)=>a+(Number(b)||0),0)}
+  function safeSpend(){return state.cashBalance-totalFunding()-state.emergencyReserve}
+
+  function occurrences(from=today(),to=addDays(today(),180),includePast=false){
+    const out=[];
+    for(const bill of state.bills){
+      const start=new Date(from.getFullYear(),from.getMonth()-1,1);
+      const end=new Date(to.getFullYear(),to.getMonth()+1,1);
+      for(let d=new Date(start);d<=end;d.setMonth(d.getMonth()+1)){
+        const due=new Date(d.getFullYear(),d.getMonth(),Math.min(Number(bill.dueDay)||1,new Date(d.getFullYear(),d.getMonth()+1,0).getDate()));
+        if((includePast||due>=from)&&due<=to){const key=occurrenceKey(bill,due);if(!isPaid(key))out.push({bill,due,key,amount:Number(bill.amount)||0,funded:funded(key)})}
+      }
+    }
+    return out.sort((a,b)=>a.due-b.due || (a.bill.priority==='essential'?-1:1));
+  }
+
+  function nextPayDate(anchor=today()){
+    let d=state.settings.nextPayDate?parseDate(state.settings.nextPayDate):null;
+    if(!d || Number.isNaN(d.getTime())){
+      const latest=[...state.paychecks].sort((a,b)=>String(b.date).localeCompare(String(a.date)))[0];
+      d=latest?addDays(parseDate(latest.date),cadenceDays()):addDays(anchor,cadenceDays());
+    }
+    while(d<anchor)d=addDays(d,cadenceDays());
+    return d;
+  }
+
+  function allocateToOccurrence(occ,maxAmount){
+    const need=Math.max(0,occ.amount-funded(occ.key));
+    const free=Math.max(0,safeSpend());
+    const amount=Math.max(0,Math.min(need,maxAmount,free));
+    if(amount>0)state.funding[occ.key]=funded(occ.key)+amount;
+    return amount;
+  }
+
+  function processPaycheck(amount,hours,date){
+    const base=Math.max(0,Number(state.settings.basePay)||0);
+    const extra=Math.max(0,amount-base);
+    state.cashBalance+=amount;
+    const payDate=parseDate(date);
+    const next=addDays(payDate,cadenceDays());
+    const immediate=occurrences(addDays(payDate,-35),next,true).filter(o=>o.due>=payDate && o.due<=next);
+    let immediateAllocated=0;
+    for(const occ of immediate)immediateAllocated+=allocateToOccurrence(occ,Infinity);
+
+    const extraUsedForImmediate=Math.max(0,immediateAllocated-base);
+    let remainingExtra=Math.max(0,extra-extraUsedForImmediate);
+    const horizon=addDays(payDate,Number(state.settings.protectionWeeks||3)*7);
+    const future=occurrences(addDays(next,1),horizon,false);
+    let futureAllocated=0;
+    for(const occ of future){if(remainingExtra<=0)break;const a=allocateToOccurrence(occ,remainingExtra);futureAllocated+=a;remainingExtra-=a}
+
+    const reserveNeed=Math.max(0,(Number(state.settings.reserveTarget)||0)-state.emergencyReserve);
+    const reserveAdd=Math.max(0,Math.min(reserveNeed,remainingExtra,Math.max(0,safeSpend())));
+    state.emergencyReserve+=reserveAdd;
+    remainingExtra-=reserveAdd;
+
+    const entry={id:uid(),date,amount,hours:Number(hours)||0,basePay:base,extraPay:extra,immediateAllocated,futureAllocated,reserveAdd,createdAt:new Date().toISOString()};
+    state.paychecks.unshift(entry);
+    state.lastPlan=entry;
+    const candidate=addDays(payDate,cadenceDays());
+    state.settings.nextPayDate=iso(candidate);
+    return entry;
+  }
+
+  function markPaid(billId,key,defaultAmount){
+    const bill=state.bills.find(b=>b.id===billId);if(!bill)return;
+    const raw=prompt(`Amount actually paid for ${bill.name}?`,String(defaultAmount));if(raw===null)return;
+    const amount=Number(raw);if(!Number.isFinite(amount)||amount<0)return toast('Enter a valid payment amount');
+    mutate(()=>{state.cashBalance-=amount;delete state.funding[key];state.payments.unshift({id:uid(),billId,billName:bill.name,occurrenceKey:key,amount,date:iso(today())})},`${bill.name} marked paid`)
+  }
+
+  function stressTest(){
+    const base=Number(state.settings.basePay)||0;if(base<=0||state.bills.length===0)return null;
+    const start=today(),end=addDays(start,28);let cash=state.cashBalance-state.emergencyReserve;let min=cash;
+    const events=[];
+    let p=nextPayDate(start);while(p<=end){events.push({date:new Date(p),type:'pay',amount:base});p=addDays(p,cadenceDays())}
+    for(const o of occurrences(addDays(start,-35),end,true)){if(o.due>=start&&o.due<=end)events.push({date:o.due,type:'bill',amount:o.amount,name:o.bill.name})}
+    events.sort((a,b)=>a.date-b.date || (a.type==='pay'?-1:1));
+    for(const e of events){cash+=e.type==='pay'?e.amount:-e.amount;min=Math.min(min,cash)}
+    return {ending:cash,min,shortage:Math.max(0,-min),events};
+  }
+
+  function continuousCoveredThrough(){const ups=occurrences(today(),addDays(today(),180));let covered=null;for(const o of ups){if(funded(o.key)+.005>=o.amount)covered=o.due;else break}return covered}
+
+  function fmtDate(d){return new Intl.DateTimeFormat('en-US',{month:'short',day:'numeric'}).format(d)}
+  function pct(a,b){return b<=0?0:Math.max(0,Math.min(100,(a/b)*100))}
+  function esc(s){return String(s??'').replace(/[&<>'"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[c]))}
+
+  function renderHome(){
+    const safe=safeSpend(),protectedAmt=totalFunding(),ups=occurrences(today(),addDays(today(),120));
+    $('safeSpend').textContent=money(safe);$('protectedTotal').textContent=money(protectedAmt);$('reserveTotal').textContent=money(state.emergencyReserve);$('reserveTarget').textContent=`Target ${money(state.settings.reserveTarget)}`;$('cashBalance').textContent=money(state.cashBalance);
+    const covered=continuousCoveredThrough();$('coveredThrough').textContent=covered?`Covered through ${fmtDate(covered)}`:'Covered through —';
+    const next=ups[0];$('nextBillAmount').textContent=next?money(next.amount):'—';$('nextBillName').textContent=next?`${next.bill.name} • ${fmtDate(next.due)}`:'No upcoming bills';
+    const status=$('protectionStatus');
+    if(!state.settings.basePay||!state.bills.length){status.className='status attn';status.textContent='● Setup needed';$('heroSub').textContent='Add your normal pay and monthly bills to calculate what is safe.'}
+    else if(safe<0){status.className='status attn';status.textContent='● Attention needed';$('heroSub').textContent='Protected money is greater than tracked cash. Add income or review bills.'}
+    else{status.className='status';status.textContent='● Protected';$('heroSub').textContent=`Bills are protected first. This number excludes ${money(protectedAmt)} for bills and ${money(state.emergencyReserve)} in reserve.`}
+    const stress=stressTest();
+    if(!stress)$('stressText').textContent='Add your normal take-home pay and bills to run the no-OT test.';
+    else if(stress.shortage>0)$('stressText').innerHTML=`With <strong>zero OT</strong> and no new discretionary spending, the next 4 weeks would dip about <strong class="danger">${money(stress.shortage)} short</strong>.`;
+    else $('stressText').innerHTML=`With <strong>zero OT</strong> and no new discretionary spending, the next 4 weeks stay above $0. Estimated ending cash: <strong class="good">${money(stress.ending)}</strong>.`;
+    $('homeBills').innerHTML=ups.slice(0,4).map(o=>billRow(o,false)).join('')||'<div class="empty">No upcoming bills yet.</div>';
+    $('demoBanner').classList.toggle('show',!!state.demo);
+  }
+
+  function billRow(o,full=true){const f=funded(o.key),remaining=Math.max(0,o.amount-f);return `<div class="item"><div class="row"><div><div class="item-title">${esc(o.bill.name)}</div><div class="item-meta">Due ${fmtDate(o.due)} • ${money(o.amount)}</div></div><span class="badge">${remaining<=.005?'Funded':money(remaining)+' left'}</span></div><div class="progress"><span style="width:${pct(f,o.amount)}%"></span></div>${full?`<div class="item-actions"><button class="btn good smallbtn" data-paid="${o.bill.id}|${o.key}|${o.amount}">Mark paid</button><button class="btn secondary smallbtn" data-editbill="${o.bill.id}">Edit bill</button></div>`:''}</div>`}
+
+  function renderBills(){const ups=occurrences(addDays(today(),-31),addDays(today(),150),true);$('billList').innerHTML=ups.slice(0,20).map(o=>billRow(o,true)).join('')||'<div class="empty">Add your monthly bills here. Paycheck Guard will fund the nearest ones first.</div>'}
+
+  function renderPay(){
+    $('basePayPreview').value=state.settings.basePay||'';
+    const p=state.lastPlan;if(p){$('payPlanCard').style.display='block';$('payPlan').innerHTML=`<div class="plan-row"><span>Paycheck</span><strong>${money(p.amount)}</strong></div><div class="plan-row"><span>Normal base</span><strong>${money(p.basePay)}</strong></div><div class="plan-row"><span>Extra / OT</span><strong class="good">${money(p.extraPay)}</strong></div><div class="plan-row"><span>Bills before next check</span><strong>${money(p.immediateAllocated)}</strong></div><div class="plan-row"><span>Future bills protected</span><strong>${money(p.futureAllocated)}</strong></div><div class="plan-row"><span>Emergency reserve added</span><strong>${money(p.reserveAdd)}</strong></div><div class="plan-row"><span>Safe to spend now</span><strong class="good">${money(safeSpend())}</strong></div>`}else $('payPlanCard').style.display='none';
+    $('payHistory').innerHTML=state.paychecks.slice(0,20).map(p=>`<div class="item"><div class="row"><div><div class="item-title">${money(p.amount)}</div><div class="item-meta">${esc(p.date)} • ${p.hours?p.hours+' hours':'hours not entered'}</div></div><span class="badge">+${money(p.extraPay)} extra</span></div></div>`).join('')||'<div class="empty">No paychecks recorded yet.</div>';
+  }
+
+  function renderSpending(){
+    $('spendHistory').innerHTML=state.spending.slice(0,30).map(s=>`<div class="item"><div class="row"><div><div class="item-title">${esc(s.category)} • ${money(s.amount)}</div><div class="item-meta">${esc(s.date)}${s.note?' • '+esc(s.note):''}</div></div><button class="btn danger smallbtn" data-delspend="${s.id}">Delete</button></div></div>`).join('')||'<div class="empty">No spending recorded yet.</div>';
+    $('paymentHistory').innerHTML=state.payments.slice(0,30).map(p=>`<div class="item"><div class="row"><div><div class="item-title">${esc(p.billName)} • ${money(p.amount)}</div><div class="item-meta">Paid ${esc(p.date)}</div></div><span class="badge">Paid</span></div></div>`).join('')||'<div class="empty">No bill payments recorded yet.</div>';
+  }
+
+  function renderSetup(){const s=state.settings;$('setBasePay').value=s.basePay||'';$('setFrequency').value=s.frequency;$('setNextPay').value=s.nextPayDate||'';$('setWeeks').value=String(s.protectionWeeks||3);$('setReserveTarget').value=s.reserveTarget||''}
+  function renderAll(){renderHome();renderBills();renderPay();renderSpending();renderSetup()}
+
+  function showView(name){document.querySelectorAll('.view').forEach(v=>v.classList.toggle('active',v.id===`view-${name}`));document.querySelectorAll('.navbtn').forEach(b=>b.classList.toggle('active',b.dataset.view===name));window.scrollTo({top:0,behavior:'smooth'})}
+
+  document.addEventListener('click',e=>{
+    const nav=e.target.closest('[data-view]');if(nav)return showView(nav.dataset.view);
+    const go=e.target.closest('[data-go]');if(go)return showView(go.dataset.go);
+    const paid=e.target.closest('[data-paid]');if(paid){const [billId,key,amount]=paid.dataset.paid.split('|');return markPaid(billId,key,Number(amount))}
+    const edit=e.target.closest('[data-editbill]');if(edit){const b=state.bills.find(x=>x.id===edit.dataset.editbill);if(!b)return;$('billEditId').value=b.id;$('billName').value=b.name;$('billAmount').value=b.amount;$('billDay').value=b.dueDay;$('billPriority').value=b.priority;$('billFormTitle').textContent='Edit monthly bill';$('cancelBillEdit').style.display='block';showView('bills');window.scrollTo({top:0,behavior:'smooth'});return}
+    const del=e.target.closest('[data-delspend]');if(del){const s=state.spending.find(x=>x.id===del.dataset.delspend);if(!s)return;mutate(()=>{state.cashBalance+=Number(s.amount)||0;state.spending=state.spending.filter(x=>x.id!==s.id)},'Spending deleted')}
+  });
+
+  document.querySelectorAll('.navbtn').forEach(b=>b.addEventListener('click',()=>showView(b.dataset.view)));
+  $('undoBtn').addEventListener('click',undo);
+
+  $('payQuick').addEventListener('input',e=>{const text=e.target.value.replace(/,/g,'');const amount=text.match(/\$?\s*(\d+(?:\.\d{1,2})?)/);const hours=text.match(/(?:^|\s)(\d+(?:\.\d+)?)\s*h\b/i);if(amount)$('payAmount').value=amount[1];if(hours)$('payHours').value=hours[1]});
+  $('basePayPreview').addEventListener('change',()=>{const n=Number($('basePayPreview').value);if(Number.isFinite(n)&&n>=0){mutate(()=>state.settings.basePay=n,'Normal paycheck updated')}});
+
+  $('addPayBtn').addEventListener('click',()=>{const amount=Number($('payAmount').value),hours=Number($('payHours').value)||0,date=$('payDate').value||iso(today());if(!Number.isFinite(amount)||amount<=0)return toast('Enter your paycheck amount');mutate(()=>processPaycheck(amount,hours,date),'Paycheck protected');$('payQuick').value='';$('payAmount').value='';$('payHours').value='';showView('home')});
+
+  function resetBillForm(){$('billEditId').value='';$('billName').value='';$('billAmount').value='';$('billDay').value='';$('billPriority').value='essential';$('billFormTitle').textContent='Add a monthly bill';$('cancelBillEdit').style.display='none'}
+  $('cancelBillEdit').addEventListener('click',resetBillForm);
+  $('saveBillBtn').addEventListener('click',()=>{const id=$('billEditId').value,name=$('billName').value.trim(),amount=Number($('billAmount').value),dueDay=Number($('billDay').value),priority=$('billPriority').value;if(!name||!Number.isFinite(amount)||amount<=0||!Number.isInteger(dueDay)||dueDay<1||dueDay>31)return toast('Enter a bill name, amount, and due day');mutate(()=>{if(id){const b=state.bills.find(x=>x.id===id);Object.assign(b,{name,amount,dueDay,priority})}else state.bills.push({id:uid(),name,amount,dueDay,priority})},id?'Bill updated':'Bill added');resetBillForm()});
+
+  $('addSpendBtn').addEventListener('click',()=>{const amount=Number($('spendAmount').value),category=$('spendCategory').value,note=$('spendNote').value.trim(),date=$('spendDate').value||iso(today());if(!Number.isFinite(amount)||amount<=0)return toast('Enter a spending amount');mutate(()=>{state.cashBalance-=amount;state.spending.unshift({id:uid(),amount,category,note,date})},'Spending recorded');$('spendAmount').value='';$('spendNote').value='';showView('home')});
+
+  $('saveSettingsBtn').addEventListener('click',()=>{const basePay=Number($('setBasePay').value)||0,frequency=$('setFrequency').value,nextPayDate=$('setNextPay').value,protectionWeeks=Number($('setWeeks').value)||3,reserveTarget=Math.max(0,Number($('setReserveTarget').value)||0);mutate(()=>{state.settings={basePay,frequency,nextPayDate,protectionWeeks,reserveTarget};if(state.emergencyReserve>reserveTarget)state.emergencyReserve=reserveTarget},'Setup saved')});
+  $('syncBalanceBtn').addEventListener('click',()=>{const n=Number($('syncBalance').value);if(!Number.isFinite(n))return toast('Enter your current checking balance');if(!confirm(`Set tracked cash to ${money(n)}?`))return;mutate(()=>state.cashBalance=n,'Tracked cash synced');$('syncBalance').value=''});
+
+  $('exportBtn').addEventListener('click',()=>{const blob=new Blob([JSON.stringify(state,null,2)],{type:'application/json'});const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=`paycheck-guard-backup-${iso(today())}.json`;a.click();setTimeout(()=>URL.revokeObjectURL(a.href),1000);toast('Backup exported')});
+  $('importBtn').addEventListener('click',()=>$('importFile').click());
+  $('importFile').addEventListener('change',async e=>{const f=e.target.files[0];if(!f)return;try{const data=JSON.parse(await f.text());if(!data||typeof data!=='object'||!data.settings)throw new Error('bad');snapshot();state=Object.assign(blankState(),data);save();toast('Backup restored')}catch(err){toast('That backup file is not valid')}e.target.value=''});
+
+  $('demoBtn').addEventListener('click',()=>{if(!confirm('Replace current app data with fake demo data? Export a backup first if needed.'))return;mutate(()=>{const t=today();state=blankState();state.demo=true;state.settings={basePay:1000,frequency:'weekly',nextPayDate:iso(addDays(t,5)),protectionWeeks:3,reserveTarget:750};state.cashBalance=2450;state.emergencyReserve=300;state.bills=[{id:'demo-rent',name:'Rent',amount:850,dueDay:1,priority:'essential'},{id:'demo-ins',name:'Car insurance',amount:175,dueDay:18,priority:'essential'},{id:'demo-phone',name:'Phone',amount:95,dueDay:22,priority:'normal'},{id:'demo-power',name:'Electric',amount:140,dueDay:25,priority:'essential'}];processPaycheck(1550,76,iso(t))},'Demo data loaded')});
+  $('resetBtn').addEventListener('click',()=>{if(!confirm('Delete all Paycheck Guard data on this device?'))return;snapshot();state=blankState();save();toast('Everything reset')});
+
+  $('payDate').value=iso(today());$('spendDate').value=iso(today());renderAll();
+  if('serviceWorker' in navigator)window.addEventListener('load',()=>navigator.serviceWorker.register('./sw.js').catch(()=>{}));
+})();
+</script>
+</body>
+</html>
