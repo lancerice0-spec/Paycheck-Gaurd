@@ -1,0 +1,12 @@
+{
+  "name": "Paycheck Guard",
+  "short_name": "Paycheck Guard",
+  "start_url": "./",
+  "display": "standalone",
+  "background_color": "#08111f",
+  "theme_color": "#0b1220",
+  "description": "Protect bills first, use overtime to get ahead, and know what is safe to spend.",
+  "icons": [
+    {"src":"icon.svg","sizes":"any","type":"image/svg+xml","purpose":"any maskable"}
+  ]
+}
